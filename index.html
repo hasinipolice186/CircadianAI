@@ -383,6 +383,21 @@ input[type="range"]::-webkit-slider-thumb {
   margin-top: 4px;
 }
 
+.score-threshold-label {
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  display: inline-block;
+  background: rgba(26,95,168,0.08);
+  color: var(--accent);
+  border: 1px solid rgba(26,95,168,0.18);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
 .score-badge {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.95rem;
@@ -1599,7 +1614,7 @@ footer {
       <div class="scores-grid">
         <div class="score-card">
           <div class="score-card-header">
-            <div><div class="score-card-title">ISI — Insomnia Severity</div><div class="score-card-sub">Scale 0–28 · ≥15 = clinically significant</div></div>
+            <div><div class="score-card-title">ISI — Insomnia Severity</div><div class="score-card-sub">0–7 None · 8–14 Sub-threshold · 15–21 Moderate · 22–28 Severe</div></div>
             <div class="score-badge" id="isiBadge">8</div>
           </div>
           <div class="field"><label>Total ISI Score</label>
@@ -1607,11 +1622,12 @@ footer {
               <input type="range" min="0" max="28" value="8" id="isiRange" oninput="updateBadge('isiBadge',this.value,'isi')">
               <span class="range-val" id="isiVal">8</span>
             </div>
+            <div class="score-threshold-label" id="isiThreshold">Sub-threshold insomnia</div>
           </div>
         </div>
         <div class="score-card">
           <div class="score-card-header">
-            <div><div class="score-card-title">PHQ-9 — Depression</div><div class="score-card-sub">Scale 0–27 · ≥10 = moderate depression</div></div>
+            <div><div class="score-card-title">PHQ-9 — Depression</div><div class="score-card-sub">0–4 Minimal · 5–9 Mild · 10–14 Moderate · 15–19 Mod-Severe · 20–27 Severe</div></div>
             <div class="score-badge" id="phqBadge">5</div>
           </div>
           <div class="field"><label>Total PHQ-9 Score</label>
@@ -1619,11 +1635,12 @@ footer {
               <input type="range" min="0" max="27" value="5" id="phqRange" oninput="updateBadge('phqBadge',this.value,'phq')">
               <span class="range-val" id="phqVal">5</span>
             </div>
+            <div class="score-threshold-label" id="phqThreshold">Mild depression</div>
           </div>
         </div>
         <div class="score-card">
           <div class="score-card-header">
-            <div><div class="score-card-title">GAD-7 — Anxiety</div><div class="score-card-sub">Scale 0–21 · ≥10 = moderate anxiety</div></div>
+            <div><div class="score-card-title">GAD-7 — Anxiety</div><div class="score-card-sub">0–4 Minimal · 5–9 Mild · 10–14 Moderate · 15–21 Severe</div></div>
             <div class="score-badge" id="gadBadge">4</div>
           </div>
           <div class="field"><label>Total GAD-7 Score</label>
@@ -1631,11 +1648,12 @@ footer {
               <input type="range" min="0" max="21" value="4" id="gadRange" oninput="updateBadge('gadBadge',this.value,'gad')">
               <span class="range-val" id="gadVal">4</span>
             </div>
+            <div class="score-threshold-label" id="gadThreshold">Minimal anxiety</div>
           </div>
         </div>
         <div class="score-card">
           <div class="score-card-header">
-            <div><div class="score-card-title">MEQ — Chronotype</div><div class="score-card-sub">Scale 16–86 · low=evening / high=morning</div></div>
+            <div><div class="score-card-title">MEQ — Chronotype</div><div class="score-card-sub">16–30 Def. Evening · 31–41 Mod. Evening · 42–58 Intermediate · 59–69 Mod. Morning · 70–86 Def. Morning</div></div>
             <div class="score-badge" id="meqBadge">50</div>
           </div>
           <div class="field"><label>Total MEQ Score</label>
@@ -1643,6 +1661,7 @@ footer {
               <input type="range" min="16" max="86" value="50" id="meqRange" oninput="updateBadge('meqBadge',this.value,'meq')">
               <span class="range-val" id="meqVal">50</span>
             </div>
+            <div class="score-threshold-label" id="meqThreshold">Intermediate type</div>
           </div>
         </div>
       </div>
@@ -2724,6 +2743,41 @@ function switchDay(idx) {
 function updateBadge(badgeId, val, type) {
   document.getElementById(badgeId).textContent = val;
   document.getElementById(type+'Val').textContent = val;
+
+  const v = +val;
+  let label = '', color = '', bg = '', border = '';
+
+  if (type === 'isi') {
+    if (v <= 7)       { label='No clinically significant insomnia'; color='var(--green)'; bg='rgba(26,122,74,0.08)'; border='rgba(26,122,74,0.22)'; }
+    else if (v <= 14) { label='Sub-threshold insomnia';             color='var(--yellow)'; bg='rgba(144,104,0,0.09)'; border='rgba(144,104,0,0.22)'; }
+    else if (v <= 21) { label='Moderate insomnia';                  color='var(--orange)'; bg='rgba(176,64,16,0.09)'; border='rgba(176,64,16,0.22)'; }
+    else              { label='Severe insomnia';                    color='var(--red)';    bg='rgba(184,32,32,0.09)'; border='rgba(184,32,32,0.22)'; }
+  } else if (type === 'phq') {
+    if (v <= 4)       { label='Minimal depression';         color='var(--green)';  bg='rgba(26,122,74,0.08)';  border='rgba(26,122,74,0.22)'; }
+    else if (v <= 9)  { label='Mild depression';            color='var(--yellow)'; bg='rgba(144,104,0,0.09)';  border='rgba(144,104,0,0.22)'; }
+    else if (v <= 14) { label='Moderate depression';        color='var(--orange)'; bg='rgba(176,64,16,0.09)';  border='rgba(176,64,16,0.22)'; }
+    else if (v <= 19) { label='Moderately severe depression'; color='var(--orange)'; bg='rgba(176,64,16,0.12)'; border='rgba(176,64,16,0.28)'; }
+    else              { label='Severe depression';          color='var(--red)';    bg='rgba(184,32,32,0.09)';  border='rgba(184,32,32,0.22)'; }
+  } else if (type === 'gad') {
+    if (v <= 4)       { label='Minimal anxiety';   color='var(--green)';  bg='rgba(26,122,74,0.08)';  border='rgba(26,122,74,0.22)'; }
+    else if (v <= 9)  { label='Mild anxiety';      color='var(--yellow)'; bg='rgba(144,104,0,0.09)';  border='rgba(144,104,0,0.22)'; }
+    else if (v <= 14) { label='Moderate anxiety';  color='var(--orange)'; bg='rgba(176,64,16,0.09)';  border='rgba(176,64,16,0.22)'; }
+    else              { label='Severe anxiety';    color='var(--red)';    bg='rgba(184,32,32,0.09)';  border='rgba(184,32,32,0.22)'; }
+  } else if (type === 'meq') {
+    if (v <= 30)      { label='Definitely evening type';   color='var(--accent2)'; bg='rgba(107,63,160,0.09)'; border='rgba(107,63,160,0.22)'; }
+    else if (v <= 41) { label='Moderately evening type';   color='var(--accent2)'; bg='rgba(107,63,160,0.07)'; border='rgba(107,63,160,0.18)'; }
+    else if (v <= 58) { label='Intermediate type';         color='var(--accent)';  bg='rgba(26,95,168,0.08)';  border='rgba(26,95,168,0.18)'; }
+    else if (v <= 69) { label='Moderately morning type';   color='var(--green)';   bg='rgba(26,122,74,0.08)';  border='rgba(26,122,74,0.22)'; }
+    else              { label='Definitely morning type';   color='var(--green)';   bg='rgba(26,122,74,0.12)';  border='rgba(26,122,74,0.28)'; }
+  }
+
+  const el = document.getElementById(type + 'Threshold');
+  if (el && label) {
+    el.textContent = label;
+    el.style.color = color;
+    el.style.background = bg;
+    el.style.borderColor = border;
+  }
 }
 
 function showError(msg) {
