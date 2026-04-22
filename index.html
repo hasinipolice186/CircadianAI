@@ -383,21 +383,6 @@ input[type="range"]::-webkit-slider-thumb {
   margin-top: 4px;
 }
 
-.score-threshold-label {
-  margin-top: 8px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  padding: 4px 12px;
-  border-radius: 99px;
-  display: inline-block;
-  background: rgba(26,95,168,0.08);
-  color: var(--accent);
-  border: 1px solid rgba(26,95,168,0.18);
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-}
-
 .score-badge {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.95rem;
@@ -1525,7 +1510,7 @@ footer {
         <div class="logo-icon">🧠</div>
         <div class="logo-text">
           <h1>CircadianAI</h1>
-          <p>TCN · SLEEP ANALYSIS · v2.0</p>
+          <p>TCN · SLEEP ANALYSIS · v1.0</p>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
@@ -1548,48 +1533,6 @@ footer {
     </div>
   </div>
 </header>
-
-<!-- ⚕️ CLINICAL DISCLAIMER BANNER v2 -->
-<div id="disclaimerBanner" style="background:rgba(144,104,0,0.09);border-bottom:1px solid rgba(144,104,0,0.28);padding:10px 0;position:relative;z-index:2;">
-  <div class="container" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-    <span style="font-size:1.1rem;flex-shrink:0;">⚕️</span>
-    <span style="font-size:0.82rem;color:#7a5800;font-family:'Figtree',sans-serif;line-height:1.5;flex:1;">
-      <strong>Screening Tool Only.</strong> Uses validated clinical questionnaires (ISI, PHQ-9, GAD-7, MEQ) and AI pattern recognition.
-      Does <strong>not</strong> diagnose any medical condition. Results must be reviewed by a qualified healthcare professional.
-      Crisis support: <strong>iCall (TISS): 9152987821</strong> · <strong>SNEHI: 022-2772-6771</strong> · <strong>NIMHANS: 040-46110007</strong>
-    </span>
-    <button onclick="document.getElementById('disclaimerBanner').style.display='none'"
-      style="flex-shrink:0;background:none;border:1px solid rgba(144,104,0,0.35);border-radius:6px;color:#7a5800;font-size:0.75rem;padding:4px 10px;cursor:pointer;">
-      Dismiss
-    </button>
-  </div>
-</div>
-
-<!-- 🌙 ONBOARDING MODAL v2 -->
-<div id="onboardingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:40px 36px;max-width:500px;width:90%;box-shadow:0 32px 80px rgba(0,0,0,0.25);">
-    <div style="font-size:2rem;margin-bottom:12px;">🌙</div>
-    <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.45rem;margin-bottom:8px;color:var(--text);">Welcome to CircadianAI</h2>
-    <p style="color:var(--muted);font-size:0.88rem;margin-bottom:18px;line-height:1.7;">AI-powered sleep analysis using a Temporal Convolutional Network trained on 200 subjects × 60 days of clinical data.</p>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:22px;">
-      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--surface);border-radius:10px;padding:12px;">
-        <span style="font-size:1.1rem;">📋</span>
-        <div><strong style="font-size:0.88rem;">What you'll need</strong><p style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Sleep hours, approximate bedtime, resting heart rate for each of the last 7 days. HRV optional — use age-based defaults if you don't have a smartwatch.</p></div>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--surface);border-radius:10px;padding:12px;">
-        <span style="font-size:1.1rem;">⏱️</span>
-        <div><strong style="font-size:0.88rem;">Time commitment</strong><p style="font-size:0.8rem;color:var(--muted);margin-top:2px;">5–8 minutes total. Save each day as you go — progress stored in your browser session.</p></div>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(144,104,0,0.06);border:1px solid rgba(144,104,0,0.2);border-radius:10px;padding:12px;">
-        <span style="font-size:1.1rem;">⚕️</span>
-        <div><strong style="font-size:0.88rem;color:#7a5800;">Screening only — not a diagnosis</strong><p style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Results are a screening aid. Always consult a doctor or sleep specialist for clinical decisions.</p></div>
-      </div>
-    </div>
-    <button onclick="dismissOnboarding()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:12px;font-family:'Figtree',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:0.2px;">
-      Get Started →
-    </button>
-  </div>
-</div>
 
 <div class="container">
 
@@ -1620,59 +1563,6 @@ footer {
       <div id="modelStatusBadge" style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;padding:5px 12px;border-radius:99px;border:1px solid var(--border);background:var(--surface);color:var(--muted);white-space:nowrap;">
         <span id="modelStatusDot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--muted);margin-right:6px;"></span>
         <span id="modelStatusText">model not loaded</span>
-      </div>
-    </div>
-
-
-    <!-- ── ABOUT YOU SECTION v2 ── -->
-    <div class="section-label">00 — About You <span style="font-size:0.72rem;color:var(--muted);font-weight:400;letter-spacing:0;text-transform:none;margin-left:8px;">Personalises your sleep targets &amp; recommendations</span></div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:28px;">
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:16px;">
-        <div class="field">
-          <label>Age</label>
-          <input type="number" id="userAge" min="18" max="99" value="28" placeholder="e.g. 28"
-            style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;padding:10px 14px;width:100%;-moz-appearance:textfield;">
-          <span style="font-size:0.72rem;color:var(--muted);margin-top:3px;display:block;">NSF 2015 age-adjusted sleep target</span>
-        </div>
-        <div class="field">
-          <label>Biological Sex</label>
-          <select id="userGender" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.88rem;padding:10px 14px;width:100%;">
-            <option value="unspecified">Prefer not to say</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-          </select>
-          <span style="font-size:0.72rem;color:var(--muted);margin-top:3px;display:block;">Hormonal context notes</span>
-        </div>
-        <div class="field">
-          <label>Caffeine after 2 PM?</label>
-          <select id="userCaffeine" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.88rem;padding:10px 14px;width:100%;">
-            <option value="false">No</option>
-            <option value="true">Yes (coffee/tea/energy drinks)</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Alcohol 3+ nights/week?</label>
-          <select id="userAlcohol" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.88rem;padding:10px 14px;width:100%;">
-            <option value="false">No</option>
-            <option value="true">Yes</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Major stressor this week?</label>
-          <select id="userStress" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.88rem;padding:10px 14px;width:100%;">
-            <option value="false">No</option>
-            <option value="true">Yes (exam, illness, bereavement…)</option>
-          </select>
-          <span style="font-size:0.72rem;color:var(--muted);margin-top:3px;display:block;">Distinguishes situational vs chronic</span>
-        </div>
-        <div class="field">
-          <label>Sleep-affecting medication?</label>
-          <select id="userMedication" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.88rem;padding:10px 14px;width:100%;">
-            <option value="false">No</option>
-            <option value="true">Yes (antidepressants, beta-blockers…)</option>
-          </select>
-          <span style="font-size:0.72rem;color:var(--muted);margin-top:3px;display:block;">Affects HRV interpretation</span>
-        </div>
       </div>
     </div>
 
@@ -1709,7 +1599,7 @@ footer {
       <div class="scores-grid">
         <div class="score-card">
           <div class="score-card-header">
-            <div><div class="score-card-title">ISI — Insomnia Severity</div><div class="score-card-sub">0–7 None · 8–14 Sub-threshold · 15–21 Moderate · 22–28 Severe</div></div>
+            <div><div class="score-card-title">ISI — Insomnia Severity</div><div class="score-card-sub">Scale 0–28 · ≥15 = clinically significant</div></div>
             <div class="score-badge" id="isiBadge">8</div>
           </div>
           <div class="field"><label>Total ISI Score</label>
@@ -1717,12 +1607,11 @@ footer {
               <input type="range" min="0" max="28" value="8" id="isiRange" oninput="updateBadge('isiBadge',this.value,'isi')">
               <span class="range-val" id="isiVal">8</span>
             </div>
-            <div class="score-threshold-label" id="isiThreshold">Sub-threshold insomnia</div>
           </div>
         </div>
         <div class="score-card">
           <div class="score-card-header">
-            <div><div class="score-card-title">PHQ-9 — Depression</div><div class="score-card-sub">0–4 Minimal · 5–9 Mild · 10–14 Moderate · 15–19 Mod-Severe · 20–27 Severe</div></div>
+            <div><div class="score-card-title">PHQ-9 — Depression</div><div class="score-card-sub">Scale 0–27 · ≥10 = moderate depression</div></div>
             <div class="score-badge" id="phqBadge">5</div>
           </div>
           <div class="field"><label>Total PHQ-9 Score</label>
@@ -1730,12 +1619,11 @@ footer {
               <input type="range" min="0" max="27" value="5" id="phqRange" oninput="updateBadge('phqBadge',this.value,'phq')">
               <span class="range-val" id="phqVal">5</span>
             </div>
-            <div class="score-threshold-label" id="phqThreshold">Mild depression</div>
           </div>
         </div>
         <div class="score-card">
           <div class="score-card-header">
-            <div><div class="score-card-title">GAD-7 — Anxiety</div><div class="score-card-sub">0–4 Minimal · 5–9 Mild · 10–14 Moderate · 15–21 Severe</div></div>
+            <div><div class="score-card-title">GAD-7 — Anxiety</div><div class="score-card-sub">Scale 0–21 · ≥10 = moderate anxiety</div></div>
             <div class="score-badge" id="gadBadge">4</div>
           </div>
           <div class="field"><label>Total GAD-7 Score</label>
@@ -1743,12 +1631,11 @@ footer {
               <input type="range" min="0" max="21" value="4" id="gadRange" oninput="updateBadge('gadBadge',this.value,'gad')">
               <span class="range-val" id="gadVal">4</span>
             </div>
-            <div class="score-threshold-label" id="gadThreshold">Minimal anxiety</div>
           </div>
         </div>
         <div class="score-card">
           <div class="score-card-header">
-            <div><div class="score-card-title">MEQ — Chronotype</div><div class="score-card-sub">16–30 Def. Evening · 31–41 Mod. Evening · 42–58 Intermediate · 59–69 Mod. Morning · 70–86 Def. Morning</div></div>
+            <div><div class="score-card-title">MEQ — Chronotype</div><div class="score-card-sub">Scale 16–86 · low=evening / high=morning</div></div>
             <div class="score-badge" id="meqBadge">50</div>
           </div>
           <div class="field"><label>Total MEQ Score</label>
@@ -1756,7 +1643,6 @@ footer {
               <input type="range" min="16" max="86" value="50" id="meqRange" oninput="updateBadge('meqBadge',this.value,'meq')">
               <span class="range-val" id="meqVal">50</span>
             </div>
-            <div class="score-threshold-label" id="meqThreshold">Intermediate type</div>
           </div>
         </div>
       </div>
@@ -2085,10 +1971,7 @@ footer {
         <div class="chart-card-title"><span class="chart-dot" style="background:var(--accent2)"></span>HRV — RMSSD (ms)</div>
         <canvas id="hrvChart"></canvas>
       </div>
-      <div class="chart-card">
-        <div class="chart-card-title"><span class="chart-dot" style="background:var(--orange)"></span>ISI Stress Score</div>
-        <canvas id="isiChart"></canvas>
-      </div>
+
     </div>
 
     <!-- Circadian clock + Insights + Recs -->
@@ -2409,22 +2292,12 @@ Minimum 150 readings needed"></textarea>
           <input type="number" id="steps_${i}" min="0" max="30000" step="100" value="8000">
         </div>
         <div class="field">
-          <label>Light Exposure Today</label>
-          <select id="lux_${i}" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;padding:10px 14px;width:100%;">
-            <option value="50">🏠 Indoors all day (~50 lux)</option>
-            <option value="300">💡 Mostly indoors, some windows (~300 lux)</option>
-            <option value="1000">🌤️ Brief outdoor time (~1,000 lux)</option>
-            <option value="3000" selected>🌥️ ~1 hour outdoors (~3,000 lux)</option>
-            <option value="6000">☀️ Several hours outdoors (~6,000 lux)</option>
-            <option value="10000">🌞 Most of day outdoors (~10,000 lux)</option>
-          </select>
-          <span style="font-size:0.72rem;color:var(--muted);margin-top:3px;display:block;">Select the closest match to your day</span>
+          <label>Light Exposure (lux)</label>
+          <input type="number" id="lux_${i}" min="0" max="15000" step="100" value="3000">
         </div>
         <div class="field">
-          <label>Bedtime <span id="btimeDisplay_${i}" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent);font-weight:600;background:rgba(26,95,168,0.08);border-radius:6px;padding:2px 8px;margin-left:6px;">23:00</span></label>
-          <input type="number" id="btime_${i}" min="0" max="30" step="0.25" value="23.0"
-            oninput="(function(v,i){var h=((v%24)+24)%24;var hh=Math.floor(h);var mm=Math.round((h%1)*60);var d=document.getElementById('btimeDisplay_'+i);if(d)d.textContent=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');})(+this.value,${i})">
-          <span style="font-size:0.72rem;color:var(--muted);margin-top:3px;display:block;">Decimal hours: 23.5 = 11:30 PM · 1.0 = 1:00 AM · 25.5 = 1:30 AM (next day)</span>
+          <label>Bedtime (24h, e.g. 23.5 = 11:30 PM)</label>
+          <input type="number" id="btime_${i}" min="0" max="30" step="0.25" value="23.0">
         </div>
       </div>
       <div class="autofill-badge" id="autofillBadge_${i}" style="display:none;">
@@ -2848,41 +2721,6 @@ function switchDay(idx) {
 function updateBadge(badgeId, val, type) {
   document.getElementById(badgeId).textContent = val;
   document.getElementById(type+'Val').textContent = val;
-
-  const v = +val;
-  let label = '', color = '', bg = '', border = '';
-
-  if (type === 'isi') {
-    if (v <= 7)       { label='No clinically significant insomnia'; color='var(--green)'; bg='rgba(26,122,74,0.08)'; border='rgba(26,122,74,0.22)'; }
-    else if (v <= 14) { label='Sub-threshold insomnia';             color='var(--yellow)'; bg='rgba(144,104,0,0.09)'; border='rgba(144,104,0,0.22)'; }
-    else if (v <= 21) { label='Moderate insomnia';                  color='var(--orange)'; bg='rgba(176,64,16,0.09)'; border='rgba(176,64,16,0.22)'; }
-    else              { label='Severe insomnia';                    color='var(--red)';    bg='rgba(184,32,32,0.09)'; border='rgba(184,32,32,0.22)'; }
-  } else if (type === 'phq') {
-    if (v <= 4)       { label='Minimal depression';         color='var(--green)';  bg='rgba(26,122,74,0.08)';  border='rgba(26,122,74,0.22)'; }
-    else if (v <= 9)  { label='Mild depression';            color='var(--yellow)'; bg='rgba(144,104,0,0.09)';  border='rgba(144,104,0,0.22)'; }
-    else if (v <= 14) { label='Moderate depression';        color='var(--orange)'; bg='rgba(176,64,16,0.09)';  border='rgba(176,64,16,0.22)'; }
-    else if (v <= 19) { label='Moderately severe depression'; color='var(--orange)'; bg='rgba(176,64,16,0.12)'; border='rgba(176,64,16,0.28)'; }
-    else              { label='Severe depression';          color='var(--red)';    bg='rgba(184,32,32,0.09)';  border='rgba(184,32,32,0.22)'; }
-  } else if (type === 'gad') {
-    if (v <= 4)       { label='Minimal anxiety';   color='var(--green)';  bg='rgba(26,122,74,0.08)';  border='rgba(26,122,74,0.22)'; }
-    else if (v <= 9)  { label='Mild anxiety';      color='var(--yellow)'; bg='rgba(144,104,0,0.09)';  border='rgba(144,104,0,0.22)'; }
-    else if (v <= 14) { label='Moderate anxiety';  color='var(--orange)'; bg='rgba(176,64,16,0.09)';  border='rgba(176,64,16,0.22)'; }
-    else              { label='Severe anxiety';    color='var(--red)';    bg='rgba(184,32,32,0.09)';  border='rgba(184,32,32,0.22)'; }
-  } else if (type === 'meq') {
-    if (v <= 30)      { label='Definitely evening type';   color='var(--accent2)'; bg='rgba(107,63,160,0.09)'; border='rgba(107,63,160,0.22)'; }
-    else if (v <= 41) { label='Moderately evening type';   color='var(--accent2)'; bg='rgba(107,63,160,0.07)'; border='rgba(107,63,160,0.18)'; }
-    else if (v <= 58) { label='Intermediate type';         color='var(--accent)';  bg='rgba(26,95,168,0.08)';  border='rgba(26,95,168,0.18)'; }
-    else if (v <= 69) { label='Moderately morning type';   color='var(--green)';   bg='rgba(26,122,74,0.08)';  border='rgba(26,122,74,0.22)'; }
-    else              { label='Definitely morning type';   color='var(--green)';   bg='rgba(26,122,74,0.12)';  border='rgba(26,122,74,0.28)'; }
-  }
-
-  const el = document.getElementById(type + 'Threshold');
-  if (el && label) {
-    el.textContent = label;
-    el.style.color = color;
-    el.style.background = bg;
-    el.style.borderColor = border;
-  }
 }
 
 function showError(msg) {
@@ -3074,12 +2912,9 @@ function buildResult(durHrs, insProb, Xflat) {
   const dur7   = Array.from({length:7}, (_,i) => +( Xflat[i*13+0] * 12     ).toFixed(2));
   const eff7   = Array.from({length:7}, (_,i) => +( Xflat[i*13+1] * 100    ).toFixed(1));
   const hrv7   = Array.from({length:7}, (_,i) => +( Xflat[i*13+3] * 150    ).toFixed(1));
-  const stress7= Array.from({length:7}, (_,i) => +( Xflat[i*13+9] * 28     ).toFixed(1));
-
   const durTrend    = dur7.reduce((a,b)=>a+b,0)/7;
   const effTrend    = eff7.reduce((a,b)=>a+b,0)/7;
   const hrvTrend    = hrv7.reduce((a,b)=>a+b,0)/7;
-  const stressTrend = stress7.reduce((a,b)=>a+b,0)/7;
 
   // Recommended sleep logic (mirrors inference.py)
   let recHrs, recReason;
@@ -3105,7 +2940,6 @@ function buildResult(durHrs, insProb, Xflat) {
   if (durHrs < recHrs)       insights.push(`You're averaging ${durHrs.toFixed(1)}h — ${(recHrs-durHrs).toFixed(1)}h short of your recommended ${recHrs}h target.`);
   if (effTrend < 75)          insights.push('Sleep efficiency is low — consider sleep restriction therapy.');
   if (hrvTrend < 30)          insights.push('Low HRV suggests elevated autonomic stress affecting sleep quality.');
-  if (stressTrend > 14)       insights.push('ISI score indicates clinically significant insomnia symptoms.');
   if (bedtimeHour >= 2 && bedtimeHour <= 6) insights.push('Late bedtime pattern suggests circadian phase delay.');
   if (!insights.length)       insights.push('Sleep patterns appear within healthy range. Maintain current habits.');
 
@@ -3133,11 +2967,9 @@ function buildResult(durHrs, insProb, Xflat) {
       avg_sleep_duration_hrs:   +durTrend.toFixed(2),
       avg_sleep_efficiency_pct: +effTrend.toFixed(1),
       avg_hrv_rmssd_ms:         +hrvTrend.toFixed(1),
-      avg_isi_score:            +stressTrend.toFixed(1),
       duration_7day:   dur7,
       efficiency_7day: eff7,
       hrv_7day:        hrv7,
-      stress_7day:     stress7,
     },
     insights,
     recommendations: recs.slice(0, 4),
@@ -3166,135 +2998,8 @@ async function runEdgeInference(days) {
 }
 
 // ─── Updated runAnalysis (Edge AI with FastAPI fallback) ─────────────────────
-// ── v2: Collect user context fields ──
-function collectContext() {
-  return {
-    age:           parseInt(document.getElementById('userAge')?.value || '28'),
-    gender:        document.getElementById('userGender')?.value || 'unspecified',
-    has_caffeine:  document.getElementById('userCaffeine')?.value === 'true',
-    has_alcohol:   document.getElementById('userAlcohol')?.value === 'true',
-    acute_stress:  document.getElementById('userStress')?.value === 'true',
-    on_medication: document.getElementById('userMedication')?.value === 'true',
-  };
-}
-
-// ── v2: Input validation ──
-function validateInputs() {
-  const errors = [];
-  for (let i = 0; i < 7; i++) {
-    const dur  = +document.getElementById('dur_'  + i)?.value;
-    const eff  = +document.getElementById('eff_'  + i)?.value;
-    const hr   = +document.getElementById('hr_'   + i)?.value;
-    if (isNaN(dur) || dur < 0 || dur > 14) errors.push('Day ' + (i+1) + ': Sleep duration must be 0–14 hours.');
-    if (isNaN(eff) || eff < 0 || eff > 1)  errors.push('Day ' + (i+1) + ': Sleep efficiency must be 0.0–1.0 (not a percentage — e.g. 0.85 not 85).');
-    if (isNaN(hr)  || hr < 30 || hr > 200) errors.push('Day ' + (i+1) + ': Resting heart rate must be 30–200 bpm.');
-  }
-  return errors;
-}
-
-// ── v2: Render context notes + new result fields in results section ──
-function renderContextNotes(result) {
-  const notes = result.context_notes || [];
-
-  // Context notes section
-  let notesSection = document.getElementById('contextNotesSection');
-  if (!notesSection) {
-    notesSection = document.createElement('div');
-    notesSection.id = 'contextNotesSection';
-    notesSection.style.marginBottom = '20px';
-    const copyRow = document.querySelector('.copy-row');
-    if (copyRow) copyRow.before(notesSection);
-  }
-  if (notes.length > 0) {
-    notesSection.innerHTML = '<div class="section-label" style="margin-bottom:12px;">⚠️ Context Notes</div>' +
-      notes.map(n => '<div style="background:rgba(144,104,0,0.07);border:1px solid rgba(144,104,0,0.22);border-radius:10px;padding:11px 15px;font-size:0.82rem;color:#6a4e00;font-family:Figtree,sans-serif;line-height:1.55;margin-bottom:8px;">' + n + '</div>').join('');
-    notesSection.style.display = 'block';
-  } else {
-    notesSection.style.display = 'none';
-  }
-
-  // Pattern type badge
-  const pred = result.prediction;
-  let patWrap = document.getElementById('patternTypeWrap');
-  if (!patWrap) {
-    patWrap = document.createElement('div');
-    patWrap.id = 'patternTypeWrap';
-    patWrap.style.marginBottom = '20px';
-    const copyRow = document.querySelector('.copy-row');
-    if (copyRow) copyRow.before(patWrap);
-  }
-  if (pred?.sleep_pattern_type) {
-    patWrap.innerHTML =
-      '<div class="section-label" style="margin-bottom:10px;">Sleep Pattern Classification</div>' +
-      '<div style="display:inline-block;padding:6px 16px;border-radius:99px;font-size:0.8rem;font-family:JetBrains Mono,monospace;font-weight:600;background:rgba(26,95,168,0.1);border:1px solid rgba(26,95,168,0.25);color:var(--accent);margin-bottom:8px;">' + pred.sleep_pattern_type + '</div>' +
-      (pred.age_group_sleep_target ? '<div style="font-size:0.78rem;color:var(--muted);font-family:JetBrains Mono,monospace;">🎯 NSF target for your age: ' + pred.age_group_sleep_target + '</div>' : '');
-    patWrap.style.display = 'block';
-  } else {
-    patWrap.style.display = 'none';
-  }
-
-  // Disclaimer box
-  let discWrap = document.getElementById('resultDisclaimerWrap');
-  if (!discWrap) {
-    discWrap = document.createElement('div');
-    discWrap.id = 'resultDisclaimerWrap';
-    discWrap.style.cssText = 'background:rgba(144,104,0,0.07);border:1px solid rgba(144,104,0,0.2);border-radius:12px;padding:15px 18px;margin-bottom:20px;';
-    const copyRow = document.querySelector('.copy-row');
-    if (copyRow) copyRow.before(discWrap);
-  }
-  discWrap.innerHTML = '<div style="font-family:Syne,sans-serif;font-weight:700;font-size:0.85rem;color:#7a5800;margin-bottom:4px;">⚕️ Clinical Disclaimer</div>' +
-    '<div style="font-size:0.8rem;color:#7a5800;line-height:1.6;font-family:Figtree,sans-serif;">' +
-    (result.clinical_disclaimer || 'This is a screening tool only. Results do not constitute a medical diagnosis. Consult a qualified healthcare professional before acting on any finding.') +
-    '</div>';
-
-  // Crisis box for Severe risk
-  let crisisBox = document.getElementById('crisisBox');
-  if (!crisisBox) {
-    crisisBox = document.createElement('div');
-    crisisBox.id = 'crisisBox';
-    crisisBox.style.cssText = 'background:rgba(184,32,32,0.06);border:1.5px solid rgba(184,32,32,0.3);border-radius:12px;padding:18px 20px;margin-bottom:20px;display:none;';
-    crisisBox.innerHTML = '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:0.92rem;color:var(--red);margin-bottom:8px;">🆘 Severe Risk Detected — Support Is Available</div>' +
-      '<div style="font-size:0.8rem;color:var(--muted);line-height:1.7;font-family:Figtree,sans-serif;">Your results suggest significant insomnia severity. Please consider:<ul style="margin-top:8px;padding-left:18px;"><li><strong>iCall (TISS)</strong>: 9152987821</li><li><strong>NIMHANS Sleep Medicine (Hyderabad)</strong>: 040-46110007</li><li><strong>Apollo Hospitals Sleep Clinic (Hyderabad)</strong>: 040-23607777</li><li><strong>SNEHI Mental Health</strong>: 022-2772-6771</li><li>Your nearest government hospital Psychiatry OPD</li></ul></div>';
-    const copyRow = document.querySelector('.copy-row');
-    if (copyRow) copyRow.before(crisisBox);
-  }
-  if (pred?.insomnia_risk_level === 'Severe' || pred?.insomnia_probability >= 0.75) {
-    crisisBox.style.display = 'block';
-  } else {
-    crisisBox.style.display = 'none';
-  }
-
-  // Bedtime string in clock label
-  const btStr = pred?.circadian_bedtime_str;
-  if (btStr) {
-    const cl = document.getElementById('clockLabel');
-    if (cl) cl.textContent = 'Est. bedtime: ' + btStr;
-  }
-}
-
-// ── v2: Onboarding ──
-function showOnboardingIfNew() {
-  if (!localStorage.getItem('circadian_onboarded')) {
-    const m = document.getElementById('onboardingModal');
-    if (m) m.style.display = 'flex';
-  }
-}
-function dismissOnboarding() {
-  localStorage.setItem('circadian_onboarded', '1');
-  const m = document.getElementById('onboardingModal');
-  if (m) m.style.display = 'none';
-}
-
 async function runAnalysis() {
   hideError();
-
-  // v2: Validate inputs first
-  const errors = validateInputs();
-  if (errors.length > 0) {
-    showError(errors[0]);
-    return;
-  }
-
   const days = collectDays();
 
   // If ONNX session loaded → run in-browser
@@ -3302,14 +3007,9 @@ async function runAnalysis() {
     setLoading(true, 'Running Edge AI inference…');
     try {
       const data = await runEdgeInference(days);
-      // v2: inject context notes client-side (edge model doesn't call backend)
-      const ctx = collectContext();
-      data.context_notes = buildContextNotes(ctx);
-      data.clinical_disclaimer = '⚕️ SCREENING TOOL ONLY — This tool uses validated questionnaires (ISI, PHQ-9, GAD-7, MEQ) and AI pattern recognition. It does NOT diagnose any medical condition. Results should be reviewed by a qualified healthcare professional.';
       lastResult = data;
       const histCtx = buildHistoricalContext();
       renderResults(data);
-      renderContextNotes(data);
       renderHistoricalBanner(histCtx);
       saveSession(days, data);
     } catch(e) {
@@ -3327,7 +3027,7 @@ async function runAnalysis() {
     const res = await fetch(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ days, ...collectContext() }),
+      body: JSON.stringify({ days }),
     });
     if (!res.ok) {
       const err = await res.text();
@@ -3337,7 +3037,6 @@ async function runAnalysis() {
     lastResult = data;
     const histCtx = buildHistoricalContext();
     renderResults(data);
-    renderContextNotes(data);
     renderHistoricalBanner(histCtx);
     saveSession(days, data);
   } catch(e) {
@@ -3467,11 +3166,7 @@ function renderResults(data) {
       <div class="metric-value" style="color:var(--accent2)">${trends.avg_hrv_rmssd_ms}ms</div>
       <div class="metric-sub">Heart rate variability</div>
     </div>
-    <div class="metric-card">
-      <div class="metric-label">Avg ISI Score</div>
-      <div class="metric-value" style="color:var(--orange)">${trends.avg_isi_score}</div>
-      <div class="metric-sub">/ 28 — Insomnia severity</div>
-    </div>
+
   `;
 
   // ── Risk bar ──
@@ -3490,7 +3185,6 @@ function renderResults(data) {
   renderChart('durChart', trends.duration_7day,  'Sleep Duration',  '#4f8fff', 0, 12);
   renderChart('effChart', trends.efficiency_7day,'Sleep Efficiency','#1a7a4a', 0, 100);
   renderChart('hrvChart', trends.hrv_7day,        'HRV RMSSD',       '#a78bfa', 0, 150);
-  renderChart('isiChart', trends.stress_7day,     'ISI Score',       '#b04010', 0, 28);
 
   // ── Clock ──
   drawClock(bh, pred.insomnia_risk_level);
@@ -3516,8 +3210,6 @@ function renderResults(data) {
 
   document.getElementById('resultsSection').classList.add('visible');
   document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'start' });
-  // v2: also render context if already available
-  if (lastResult?.context_notes !== undefined) renderContextNotes(lastResult);
 }
 
 // ═══════════════════════════════════════════
@@ -3669,21 +3361,6 @@ function copyReport() {
 }
 
 attachHrvListeners();
-
-// ── v2: Build context notes client-side (for Edge AI mode where no Python backend) ──
-function buildContextNotes(ctx) {
-  const notes = [];
-  if (ctx.acute_stress) notes.push('⚠️ Acute stress detected this week — results may reflect situational disruption, not chronic insomnia. Re-assess after the stressor resolves.');
-  if (ctx.on_medication) notes.push('💊 Medications (antidepressants, beta-blockers, antihistamines) can significantly affect HRV readings and sleep architecture. Share these results with your prescribing doctor.');
-  if (ctx.has_alcohol) notes.push('🍺 Regular alcohol use suppresses REM sleep and fragments sleep cycles — this likely contributes to low sleep efficiency scores.');
-  if (ctx.has_caffeine) notes.push('☕ Caffeine after 2 PM has a 5–7 hour half-life. This may be delaying sleep onset and reducing deep sleep even if you feel you can fall asleep normally.');
-  if (ctx.gender === 'female') notes.push('🔬 Hormonal fluctuations (menstrual cycle, perimenopause) can substantially affect sleep quality and HRV. These factors are not captured in this model.');
-  return notes;
-}
-
-// ── v2: Onboarding on load ──
-window.addEventListener('load', () => { setTimeout(showOnboardingIfNew, 800); });
-
 
 // ═══════════════════════════════════════════
 //  INIT badges
@@ -4600,7 +4277,6 @@ async function saveSession(days, result) {
     avg_sleep_duration_hrs:  t.avg_sleep_duration_hrs     ?? null,
     avg_sleep_efficiency_pct:t.avg_sleep_efficiency_pct   ?? null,
     avg_hrv_rmssd_ms:        t.avg_hrv_rmssd_ms           ?? null,
-    avg_isi_score:           t.avg_isi_score              ?? null,
     insights:                JSON.stringify(result.insights        || []),
     recommendations:         JSON.stringify(result.recommendations || []),
   };
@@ -4746,10 +4422,6 @@ function renderHistory() {
           <div class="history-stat">
             <span class="history-stat-label">HRV</span>
             <span class="history-stat-val" style="color:var(--accent2)">${s.avg_hrv_rmssd_ms?.toFixed(0)}ms</span>
-          </div>
-          <div class="history-stat">
-            <span class="history-stat-label">ISI</span>
-            <span class="history-stat-val" style="color:var(--yellow)">${s.avg_isi_score?.toFixed(0)}</span>
           </div>
           <div class="history-stat">
             <span class="history-stat-label">Bedtime</span>
