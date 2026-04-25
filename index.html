@@ -37,12 +37,12 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  font-size: 1.1rem;
-  line-height: 1.75;
+  font-size: 1.15rem;
+  line-height: 1.8;
 }
 
 html {
-  font-size: 18px;
+  font-size: 19px;
 }
 
 /* ── NOISE OVERLAY ── */
@@ -161,10 +161,10 @@ header {
 
 .hero h2 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(2.6rem, 6vw, 4rem);
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
   font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   background: linear-gradient(90deg, var(--accent), var(--accent2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -317,6 +317,31 @@ header {
   box-shadow: 0 0 0 3px rgba(79,143,255,0.1);
 }
 
+/* ── LIGHT EXPOSURE DROPDOWN ── */
+.lux-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.92rem;
+  padding: 10px 14px;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.lux-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79,143,255,0.1);
+}
+
 .range-wrap {
   display: flex; align-items: center; gap: 10px;
 }
@@ -366,7 +391,13 @@ input[type="range"]::-webkit-slider-thumb {
 
 .score-card-header {
   display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 10px;
   margin-bottom: 14px;
+}
+
+.score-card-header > div:first-child {
+  min-width: 0;
+  flex: 1;
 }
 
 .score-card-title {
@@ -374,7 +405,6 @@ input[type="range"]::-webkit-slider-thumb {
   font-size: 1.1rem;
   font-weight: 800;
   color: var(--accent);
-}
 }
 
 .score-card-sub {
@@ -391,7 +421,8 @@ input[type="range"]::-webkit-slider-thumb {
   background: rgba(26,95,168,0.1);
   color: var(--accent);
   border: 1px solid rgba(26,95,168,0.2);
-}
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* ── BUTTONS ── */
@@ -1538,7 +1569,6 @@ footer {
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-tag">⚡ 7-day temporal analysis · 13 biomarkers · multi-task prediction</div>
     <h2>AI-based <span>sleep and circadian</span><br>rhythm analysis</h2>
     <p>Enter 7 days of sleep and biometric data to receive an AI-powered circadian rhythm analysis and personalised clinical insights.</p>
     <div class="mode-toggle">
@@ -1581,8 +1611,21 @@ footer {
 
     <div id="dayForms"></div>
 
+  </div><!-- /questionnaire -->
+
+  <!-- ════════════════════════════════════════
+       SHARED CLINICAL QUESTIONNAIRE SECTION
+       Shown for both Questionnaire & CSV modes
+  ════════════════════════════════════════ -->
+  <div id="sharedClinicalSection" style="margin-top:0;">
+
     <!-- Part 2: Clinical scores -->
-    <div class="section-label" style="margin-top:36px;">02 — Clinical Questionnaires</div>
+    <div class="section-label" style="margin-top:36px;" id="clinicalSectionLabel">02 — Clinical Questionnaires</div>
+
+    <!-- Info banner shown in CSV mode -->
+    <div id="csvClinicalBanner" style="display:none;background:rgba(26,95,168,0.06);border:1px solid rgba(26,95,168,0.2);border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:0.84rem;color:var(--accent);font-family:'JetBrains Mono',monospace;">
+      ℹ️ These scores will be applied to all 7 rows from your CSV file. Answer once per session.
+    </div>
 
     <!-- Mode toggle: know scores vs take questionnaire -->
     <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;">
@@ -1736,8 +1779,8 @@ footer {
 
     </div><!-- /scoreQuizPanel -->
 
-    <!-- Buttons -->
-    <div class="btn-row">
+    <!-- Action buttons — Questionnaire mode -->
+    <div class="btn-row" id="questBtnRow">
       <button class="btn btn-primary" id="analyseBtn" onclick="runAnalysis()">
         ⚡ Analyse Sleep
       </button>
@@ -1746,12 +1789,17 @@ footer {
       </button>
     </div>
 
+    <!-- Action buttons — CSV mode -->
+    <div class="btn-row" id="csvBtnRow" style="display:none;">
+      <button class="btn btn-primary" id="csvAnalyseBtn" onclick="runCsvAnalysis()" disabled>
+        ⚡ Analyse CSV
+      </button>
+    </div>
 
-
-  </div><!-- /questionnaire -->
+  </div><!-- /sharedClinicalSection -->
 
   <!-- ════════════════════════════════════════
-       CSV PANEL
+       CSV PANEL (upload zone + simulations only)
   ════════════════════════════════════════ -->
   <div class="panel" id="csvPanel">
 
@@ -1760,7 +1808,7 @@ footer {
       <div id="csvModelStatus" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--muted);">Uses the same ONNX model loaded above — runs fully in-browser</div>
     </div>
 
-    <div class="section-label">Upload Smartwatch CSV</div>
+    <div class="section-label">01 — Upload Smartwatch CSV</div>
 
     <div class="upload-zone" id="uploadZone" onclick="document.getElementById('csvFileInput').click()"
          ondragover="event.preventDefault();this.classList.add('drag-over')"
@@ -1768,15 +1816,11 @@ footer {
          ondrop="handleDrop(event)">
       <div class="upload-icon">📁</div>
       <div class="upload-title" id="uploadTitle">Drop your CSV here or click to browse</div>
-      <div class="upload-sub">Required columns: subject_id, date, sleep_duration_hrs, sleep_efficiency,<br>heart_rate_resting, rmssd, sdnn, steps, light_exposure_lux, bedtime_hour,<br>isi_score, phq_score, gad_score, meq_score</div>
+      <div class="upload-sub">Required columns: sleep_duration_hrs, sleep_efficiency, heart_rate_resting,<br>rmssd, sdnn, steps, light_exposure_lux, bedtime_hour<br><span style="color:var(--accent);font-weight:600;">ISI · PHQ-9 · GAD-7 · MEQ scores are entered via the clinical questionnaire below.</span></div>
     </div>
-    <input type="file" id="csvFileInput" accept=".csv" onchange="handleCsvFile(event)">
+    <input type="file" id="csvFileInput" accept=".csv" onchange="handleCsvFile(event)" style="display:none">
 
-    <div class="btn-row">
-      <button class="btn btn-primary" id="csvAnalyseBtn" onclick="runCsvAnalysis()" disabled>
-        ⚡ Analyse CSV
-      </button>
-    </div>
+  </div><!-- /csvPanel -->
 
     <!-- CSV Simulation section — shown after CSV is loaded -->
     <div id="csvSimSection" style="display:none;margin-top:8px;margin-bottom:8px;">
@@ -1923,7 +1967,6 @@ footer {
       </div>
 
     </div><!-- /csvSimSection -->
-  </div>
 
   <!-- ════════════════════════════════════════
        LOADING
@@ -2292,11 +2335,18 @@ Minimum 150 readings needed"></textarea>
           <input type="number" id="steps_${i}" min="0" max="30000" step="100" value="8000">
         </div>
         <div class="field">
-          <label>Light Exposure (lux)</label>
-          <input type="number" id="lux_${i}" min="0" max="15000" step="100" value="3000">
+          <label>☀️ Light Exposure Today</label>
+          <select class="lux-select" id="lux_${i}" onchange="document.getElementById('lux_${i}').value=this.value">
+            <option value="200">🏠 Mostly indoors — dim / artificial light all day</option>
+            <option value="800">🪟 Near a window — bright indoor or window light</option>
+            <option value="3000" selected>🚶 Outdoors ~30 min — short walk or errands</option>
+            <option value="6000">🌤️ Outdoors 1–2 hrs — overcast sky, casual time outside</option>
+            <option value="10000">☀️ Outdoors 2+ hrs — sunny day, long outdoor activity</option>
+            <option value="10000">💡 Used a light therapy lamp (10,000 lux box)</option>
+          </select>
         </div>
         <div class="field">
-          <label>Bedtime (24h, e.g. 23.5 = 11:30 PM)</label>
+          <label>Bedtime hour (e.g. 23.5 = 11:30 PM)</label>
           <input type="number" id="btime_${i}" min="0" max="30" step="0.25" value="23.0">
         </div>
       </div>
@@ -2323,9 +2373,8 @@ Minimum 150 readings needed"></textarea>
 
 buildDayForms();
 
-// ═══════════════════════════════════════════
-//  HRV CALCULATOR
-// ═══════════════════════════════════════════
+
+
 
 // ── Population age/sex defaults (validated clinical norms) ──
 const HRV_AGE_DEFAULTS = {
@@ -2622,8 +2671,10 @@ function applyJetlagAutofill(i) {
   document.getElementById(`rmssd_${i}`).value = Math.round(rmssd);
   document.getElementById(`sdnn_${i}`).value  = Math.round(sdnn);
   document.getElementById(`steps_${i}`).value = Math.round(steps);
-  document.getElementById(`lux_${i}`).value   = lux;
-  document.getElementById(`btime_${i}`).value = newBedtime.toFixed(2);
+  // Update lux dropdown
+  const luxSel1 = document.getElementById(`lux_${i}`);
+  if (luxSel1) { const opt = [...luxSel1.options].find(o => +o.value >= lux); if (opt) luxSel1.value = opt.value; }
+  
 
   document.getElementById(`autofillBadge_${i}`).style.display = '';
 
@@ -2676,7 +2727,10 @@ function applyNightshiftAutofill(i) {
   document.getElementById(`rmssd_${i}`).value = Math.round(rmssd);
   document.getElementById(`sdnn_${i}`).value  = Math.round(sdnn);
   document.getElementById(`steps_${i}`).value = Math.round(steps);
-  document.getElementById(`lux_${i}`).value   = lux;
+  // Update lux dropdown
+  const luxSel2 = document.getElementById(`lux_${i}`);
+  if (luxSel2) { const opt = [...luxSel2.options].find(o => +o.value >= lux); if (opt) luxSel2.value = opt.value; }
+
   document.getElementById(`btime_${i}`).value = bedtime;
 
   document.getElementById(`autofillBadge_${i}`).style.display = '';
@@ -2696,10 +2750,26 @@ function applyNightshiftAutofill(i) {
 // ═══════════════════════════════════════════
 function switchMode(mode) {
   currentMode = mode;
+  // Questionnaire panel (day forms section)
   document.getElementById('questionnairePanel').classList.toggle('active', mode === 'questionnaire');
+  // CSV panel (upload zone)
   document.getElementById('csvPanel').classList.toggle('active', mode === 'csv');
+  // Mode buttons
   document.getElementById('modeQuestBtn').classList.toggle('active', mode === 'questionnaire');
   document.getElementById('modeCsvBtn').classList.toggle('active', mode === 'csv');
+
+  // Shared clinical section: always visible, but show correct action button
+  document.getElementById('questBtnRow').style.display  = mode === 'questionnaire' ? '' : 'none';
+  document.getElementById('csvBtnRow').style.display    = mode === 'csv' ? '' : 'none';
+
+  // Show banner inside clinical section when in CSV mode
+  const banner = document.getElementById('csvClinicalBanner');
+  if (banner) banner.style.display = mode === 'csv' ? '' : 'none';
+
+  // Update section label number
+  const lbl = document.getElementById('clinicalSectionLabel');
+  if (lbl) lbl.textContent = mode === 'csv' ? '02 — Clinical Questionnaires' : '02 — Clinical Questionnaires';
+
   hideResults();
 }
 
@@ -2736,7 +2806,10 @@ function hideError() {
 function setLoading(on, text='Running TCN inference…') {
   document.getElementById('loadingOverlay').classList.toggle('visible', on);
   document.getElementById('loadingText').textContent = text || 'Running Edge AI inference…';
-  document.getElementById('analyseBtn').disabled = on;
+  const ab = document.getElementById('analyseBtn');
+  const cb = document.getElementById('csvAnalyseBtn');
+  if (ab) ab.disabled = on;
+  if (cb && currentMode === 'csv') cb.disabled = on;
 }
 
 function hideResults() {
@@ -2754,7 +2827,7 @@ function loadSampleData() {
     document.getElementById(`rmssd_${i}`).value = d.rmssd;
     document.getElementById(`sdnn_${i}`).value  = d.sdnn;
     document.getElementById(`steps_${i}`).value = d.steps;
-    document.getElementById(`lux_${i}`).value   = d.light_exposure_lux;
+    
     document.getElementById(`btime_${i}`).value = d.bedtime_hour;
   });
   // Apply sample HRV via age defaults for demo
@@ -2790,7 +2863,7 @@ function collectDays() {
       rmssd:                +document.getElementById(`rmssd_${i}`).value,
       sdnn:                 +document.getElementById(`sdnn_${i}`).value,
       steps:                +document.getElementById(`steps_${i}`).value,
-      light_exposure_lux:   +document.getElementById(`lux_${i}`).value,
+      light_exposure_lux:   +document.getElementById(`lux_${i}`).value || 3000,
       bedtime_hour:         +document.getElementById(`btime_${i}`).value,
       isi_score:            isiScore,
       phq_score:            phqScore,
@@ -3092,7 +3165,27 @@ async function runCsvAnalysis() {
   hideError();
   setLoading(true, 'Running Edge AI on CSV…');
 
-  const days = csvRows.slice(0, 7);
+  // Read clinical scores from the shared questionnaire section
+  const isiScore = +document.getElementById('isiRange').value;
+  const phqScore = +document.getElementById('phqRange').value;
+  const gadScore = +document.getElementById('gadRange').value;
+  const meqScore = +document.getElementById('meqRange').value;
+
+  // Inject clinical scores into first 7 rows (CSV doesn't include them)
+  const days = csvRows.slice(0, 7).map(row => ({
+    sleep_duration_hrs:  +row.sleep_duration_hrs  || 7.0,
+    sleep_efficiency:    +row.sleep_efficiency     || 0.85,
+    heart_rate_resting:  +row.heart_rate_resting   || 62,
+    rmssd:               +row.rmssd               || 40,
+    sdnn:                +row.sdnn                || 46,
+    steps:               +row.steps               || 8000,
+    light_exposure_lux:  +row.light_exposure_lux  || 3000,
+    bedtime_hour:        +row.bedtime_hour         || 23.0,
+    isi_score:           isiScore,
+    phq_score:           phqScore,
+    gad_score:           gadScore,
+    meq_score:           meqScore,
+  }));
 
   try {
     const data = await runEdgeInference(days);
@@ -4167,7 +4260,7 @@ function readDayFields(i) {
     rmssd:              parseFloat(document.getElementById(`rmssd_${i}`)?.value) || 0,
     sdnn:               parseFloat(document.getElementById(`sdnn_${i}`)?.value)  || 0,
     steps:              parseFloat(document.getElementById(`steps_${i}`)?.value) || 0,
-    light_exposure_lux: parseFloat(document.getElementById(`lux_${i}`)?.value)   || 0,
+    light_exposure_lux: parseFloat(document.getElementById(`lux_${i}`)?.value) || 3000,
     bedtime_hour:       parseFloat(document.getElementById(`btime_${i}`)?.value) || 0,
   };
 }
