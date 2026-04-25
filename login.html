@@ -270,20 +270,43 @@ body::after {
 
 /* ── FEATURE PILLS ── */
 .feature-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 28px;
 }
 .feature-pill {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  padding: 5px 12px;
-  border-radius: 99px;
-  border: 1px solid rgba(26,95,168,0.2);
-  background: rgba(26,95,168,0.05);
-  color: var(--accent);
-  letter-spacing: 0.3px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 12px;
+  letter-spacing: 0.1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+  user-select: none;
+}
+.feature-pill:nth-child(1) {
+  border: 1.5px solid rgba(245,158,11,0.3);
+  background: rgba(245,158,11,0.09);
+  color: #92400e;
+}
+.feature-pill:nth-child(2) {
+  border: 1.5px solid rgba(107,63,160,0.3);
+  background: rgba(107,63,160,0.08);
+  color: #5b21b6;
+}
+.feature-pill:nth-child(3) {
+  border: 1.5px solid rgba(26,122,74,0.3);
+  background: rgba(26,122,74,0.08);
+  color: #065f46;
+}
+.feature-pill:nth-child(4) {
+  border: 1.5px solid rgba(59,130,246,0.3);
+  background: rgba(59,130,246,0.08);
+  color: #1e40af;
 }
 
 /* ── SPINNER ── */
