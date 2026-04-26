@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CircadianAI — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg:      #f5f0e8;
+  --surface: #ece6da;
+  --card:    #faf7f2;
+  --border:  #d4cbbf;
+  --border2: #bfb4a6;
+  --text:    #28200f;
+  --muted:   #7a6a52;
+  --accent:  #1a5fa8;
+  --accent2: #6b3fa0;
+  --green:   #1a7a4a;
+  --red:     #b82020;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Figtree', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 18px;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+
+/* ── GRID BG ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.3;
+  pointer-events: none; z-index: 0;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── CARD ── */
+.auth-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: 48px 44px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.6) inset;
+}
+
+/* ── LOGO ── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+.logo-icon {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 0 28px rgba(26,95,168,0.35);
+  flex-shrink: 0;
+}
+.logo-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #1a5fa8, #6b3fa0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+.logo-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* ── HEADING ── */
+.auth-heading {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.auth-sub {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 30px;
+  letter-spacing: 0.2px;
+}
+
+/* ── TABS ── */
+.auth-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+.auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 9px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  color: var(--muted);
+  background: transparent;
+  transition: all 0.2s;
+}
+.auth-tab.active {
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid var(--border2);
+}
+
+/* ── FIELDS ── */
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+.auth-field label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.2px;
+}
+.auth-field input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  padding: 13px 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  outline: none;
+}
+.auth-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(26,95,168,0.1);
+}
+
+/* ── SUBMIT BTN ── */
+.auth-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 6px;
+  box-shadow: 0 4px 20px rgba(26,95,168,0.3);
+  letter-spacing: 0.2px;
+}
+.auth-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(26,95,168,0.4);
+}
+.auth-btn:active:not(:disabled) { transform: translateY(0); }
+.auth-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── ALERTS ── */
+.auth-error {
+  background: rgba(184,32,32,0.07);
+  border: 1px solid rgba(184,32,32,0.25);
+  border-radius: 10px;
+  padding: 11px 15px;
+  color: var(--red);
+  font-size: 0.85rem;
+  font-family: 'Figtree', sans-serif;
+  margin-bottom: 18px;
+  display: none;
+  line-height: 1.5;
+}
+.auth-success {
+  background: rgba(26,122,74,0.07);
+  border: 1px solid rgba(26,122,74,0.25);
+  border-radius: 10px;
+  padding: 11px 15px;
+  color: var(--green);
+  font-size: 0.85rem;
+  font-family: 'Figtree', sans-serif;
+  margin-bottom: 18px;
+  display: none;
+  line-height: 1.5;
+}
+
+/* ── DIVIDER ── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0;
+  color: var(--border2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+}
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── FOOTER NOTE ── */
+.auth-note {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.7;
+}
+.auth-note a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.auth-note a:hover { text-decoration: underline; }
+
+/* ── FEATURE PILLS ── */
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.feature-pill {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 12px;
+  letter-spacing: 0.1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+  user-select: none;
+}
+.feature-pill:nth-child(1) {
+  border: 1.5px solid rgba(245,158,11,0.3);
+  background: rgba(245,158,11,0.09);
+  color: #92400e;
+}
+.feature-pill:nth-child(2) {
+  border: 1.5px solid rgba(107,63,160,0.3);
+  background: rgba(107,63,160,0.08);
+  color: #5b21b6;
+}
+.feature-pill:nth-child(3) {
+  border: 1.5px solid rgba(26,122,74,0.3);
+  background: rgba(26,122,74,0.08);
+  color: #065f46;
+}
+.feature-pill:nth-child(4) {
+  border: 1.5px solid rgba(59,130,246,0.3);
+  background: rgba(59,130,246,0.08);
+  color: #1e40af;
+}
+
+/* ── SPINNER ── */
+.spinner-inline {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── FORGOT PASSWORD ── */
+.forgot-link {
+  text-align: right;
+  margin-top: -10px;
+  margin-bottom: 18px;
+}
+.forgot-link a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.18s;
+}
+.forgot-link a:hover { color: var(--accent); }
+
+/* ── RESET PANEL ── */
+#resetPanel { display: none; }
+
+/* ── PAGE FOOTER ── */
+.page-footer {
+  margin-top: 28px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  opacity: 0.7;
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="logo">
+      <div class="logo-icon">🧠</div>
+      <div>
+        <div class="logo-name">CircadianAI</div>
+        <div class="logo-sub">TCN · SLEEP ANALYSIS · v1.0</div>
+      </div>
+    </div>
+
+    <!-- Feature pills -->
+    <div class="feature-row">
+      <span class="feature-pill">⚡ 7-day analysis</span>
+      <span class="feature-pill">🧬 13 biomarkers</span>
+      <span class="feature-pill">📊 History tracking</span>
+      <span class="feature-pill">🔒 Private & secure</span>
+    </div>
+
+    <!-- Sign In / Sign Up panel -->
+    <div id="authPanel">
+      <div class="auth-heading" id="authHeading">Welcome back</div>
+      <div class="auth-sub" id="authSubtext">Sign in to your CircadianAI account</div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Create Account</button>
+      </div>
+
+      <div class="auth-error"   id="authError"></div>
+      <div class="auth-success" id="authSuccess"></div>
+
+      <div class="auth-field" id="nameField" style="display:none;">
+        <label>Full Name</label>
+        <input type="text" id="inputName" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="auth-field">
+        <label>Email Address</label>
+        <input type="email" id="inputEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" id="inputPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <div class="forgot-link" id="forgotLinkRow">
+        <a href="#" onclick="showReset(); return false;">Forgot password?</a>
+      </div>
+
+      <button class="auth-btn" id="submitBtn" onclick="handleSubmit()">Sign In</button>
+
+      <div class="auth-note" style="margin-top:20px;">
+        Your sleep data is private and encrypted.<br>Only you can access your history.
+      </div>
+    </div>
+
+    <!-- Reset Password panel -->
+    <div id="resetPanel">
+      <div class="auth-heading">Reset Password</div>
+      <div class="auth-sub">Enter your email and we'll send a reset link</div>
+
+      <div class="auth-error"   id="resetError"></div>
+      <div class="auth-success" id="resetSuccess"></div>
+
+      <div class="auth-field">
+        <label>Email Address</label>
+        <input type="email" id="resetEmail" placeholder="you@example.com">
+      </div>
+
+      <button class="auth-btn" id="resetBtn" onclick="handleReset()">Send Reset Link</button>
+
+      <div class="auth-note" style="margin-top:20px;">
+        <a href="#" onclick="showAuth(); return false;">← Back to Sign In</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    CircadianAI · TCN-based Sleep Analysis · For research use only
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  SUPABASE INIT
+// ══════════════════════════════════════════════
+const SUPABASE_URL = 'https://iswyfohnkyaubjunnqso.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlzd3lmb2hua3lhdWJqdW5ucXNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MjU4NzYsImV4cCI6MjA5MDEwMTg3Nn0.MaxHUJvHyxmL-FahtG9VcqRt6q3mfbajXxH_tX-0Wjk';
+let db = null;
+
+// ── Wait for Supabase CDN then init ──────────────────────────────────────────
+async function initSupabase() {
+  const maxWait = 5000, interval = 100;
+  let elapsed = 0;
+  while (elapsed < maxWait) {
+    if (typeof window.supabase !== 'undefined') {
+      try {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✓ Supabase ready');
+        // If already logged in, redirect straight to app
+        try {
+          const { data: { session }, error } = await db.auth.getSession();
+          if (error) { console.warn('getSession error on login page:', error.message); return; }
+          if (session) { window.location.href = 'index.html'; return; }
+        } catch(se) { console.warn('getSession threw on login page:', se.message); }
+        return;
+      } catch(e) {
+        console.error('✗ Supabase init failed:', e);
+        showError('authError', '⚠ Could not connect to authentication service. Please check your internet connection and refresh.');
+        return;
+      }
+    }
+    await new Promise(r => setTimeout(r, interval));
+    elapsed += interval;
+  }
+  console.warn('✗ Supabase CDN timeout');
+  showError('authError', '⚠ Authentication service failed to load. Check your internet connection and refresh.');
+}
+
+// Boot
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSupabase);
+} else {
+  initSupabase();
+}
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let mode = 'login'; // 'login' | 'signup'
+
+// ══════════════════════════════════════════════
+//  TAB SWITCH
+// ══════════════════════════════════════════════
+function switchTab(newMode) {
+  mode = newMode;
+  const isLogin = mode === 'login';
+
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabSignup').classList.toggle('active', !isLogin);
+
+  document.getElementById('authHeading').textContent  = isLogin ? 'Welcome back'      : 'Create your account';
+  document.getElementById('authSubtext').textContent  = isLogin ? 'Sign in to your CircadianAI account' : 'Start tracking your sleep patterns today';
+  document.getElementById('submitBtn').textContent    = isLogin ? 'Sign In'           : 'Create Account';
+  document.getElementById('nameField').style.display  = isLogin ? 'none'              : 'flex';
+  document.getElementById('forgotLinkRow').style.display = isLogin ? 'block'          : 'none';
+
+  document.getElementById('inputPassword').autocomplete = isLogin ? 'current-password' : 'new-password';
+
+  clearAlerts();
+}
+
+// ══════════════════════════════════════════════
+//  FORGOT / RESET VIEWS
+// ══════════════════════════════════════════════
+function showReset() {
+  document.getElementById('authPanel').style.display  = 'none';
+  document.getElementById('resetPanel').style.display = 'block';
+  clearAlerts();
+}
+function showAuth() {
+  document.getElementById('resetPanel').style.display = 'none';
+  document.getElementById('authPanel').style.display  = 'block';
+  clearAlerts();
+}
+
+// ══════════════════════════════════════════════
+//  ALERTS
+// ══════════════════════════════════════════════
+function clearAlerts() {
+  ['authError','authSuccess','resetError','resetSuccess'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.display = 'none'; el.textContent = ''; }
+  });
+}
+function showError(elId, msg) {
+  const el = document.getElementById(elId);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function showSuccess(elId, msg) {
+  const el = document.getElementById(elId);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ══════════════════════════════════════════════
+//  SUBMIT HANDLER
+// ══════════════════════════════════════════════
+async function handleSubmit() {
+  const email    = document.getElementById('inputEmail').value.trim();
+  const password = document.getElementById('inputPassword').value;
+  const name     = document.getElementById('inputName').value.trim();
+  const btn      = document.getElementById('submitBtn');
+
+  clearAlerts();
+
+  if (!db) { showError('authError', '⚠ Authentication service not ready. Please refresh the page.'); return; }
+  if (!email)    { showError('authError', '⚠ Please enter your email address.'); return; }
+  if (!password) { showError('authError', '⚠ Please enter your password.'); return; }
+  if (mode === 'signup' && password.length < 6) {
+    showError('authError', '⚠ Password must be at least 6 characters.'); return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner-inline"></span>${mode === 'login' ? 'Signing in…' : 'Creating account…'}`;
+
+  try {
+    if (mode === 'signup') {
+      const { data, error } = await db.auth.signUp({
+        email, password,
+        options: { data: { name: name || email.split('@')[0] } }
+      });
+      if (error) throw error;
+
+      // If user object came back but with no session, email confirmation is required
+      if (data?.user && !data?.session) {
+        showSuccess('authSuccess',
+          '✓ Account created! Check your inbox to confirm your email, then sign in here.');
+        switchTab('login');
+        document.getElementById('inputEmail').value = email;
+        document.getElementById('inputPassword').value = '';
+      } else if (data?.session) {
+        // Email confirmation disabled — logged in immediately
+        window.location.href = 'index.html';
+      }
+    } else {
+      const { error } = await db.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      window.location.href = 'index.html';
+    }
+  } catch (e) {
+    console.error('Auth error:', e);
+    let msg = e.message || 'Authentication failed.';
+
+    // Friendly messages for common errors
+    if (msg.includes('Invalid login credentials') || msg.includes('invalid_credentials'))
+      msg = '⚠ Incorrect email or password. Please try again.';
+    else if (msg.includes('Email not confirmed') || msg.includes('email_not_confirmed'))
+      msg = '⚠ Please confirm your email first — check your inbox for the confirmation link.';
+    else if (msg.includes('already registered') || msg.includes('user_already_exists'))
+      msg = '⚠ This email is already registered. Switch to Sign In.';
+    else if (msg.includes('Database error') || msg.includes('db_error') || msg.includes('unexpected_failure'))
+      msg = '⚠ Supabase setup issue — please run the SQL fix below in your Supabase SQL Editor:\n\nDROP TABLE IF EXISTS public.users CASCADE;\n\nThen try again.';
+    else if (msg.includes('rate limit') || msg.includes('too_many_requests'))
+      msg = '⚠ Too many attempts. Please wait a minute and try again.';
+
+    showError('authError', msg);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = mode === 'login' ? 'Sign In' : 'Create Account';
+  }
+}
+
+// ══════════════════════════════════════════════
+//  RESET PASSWORD
+// ══════════════════════════════════════════════
+async function handleReset() {
+  const email = document.getElementById('resetEmail').value.trim();
+  const btn   = document.getElementById('resetBtn');
+  clearAlerts();
+
+  if (!email) { showError('resetError', '⚠ Please enter your email address.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-inline"></span>Sending…';
+
+  try {
+    const { error } = await db.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/index.html'
+    });
+    if (error) throw error;
+    showSuccess('resetSuccess', '✓ Reset link sent! Check your inbox.');
+  } catch (e) {
+    showError('resetError', e.message || 'Failed to send reset link.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send Reset Link';
+  }
+}
+
+// ══════════════════════════════════════════════
+//  KEYBOARD SUPPORT
+// ══════════════════════════════════════════════
+['inputName','inputEmail','inputPassword','resetEmail'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    if (id === 'resetEmail') handleReset();
+    else handleSubmit();
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "version": "3.0",
+  "seq_len": 7,
+  "num_features": 19,
+  "feature_names": [
+    "sleep_duration_hrs",
+    "sleep_efficiency",
+    "heart_rate_norm",
+    "rmssd_norm",
+    "sdnn_norm",
+    "steps_norm",
+    "light_exposure_norm",
+    "bedtime_sin",
+    "bedtime_cos",
+    "isi_norm",
+    "phq_norm",
+    "gad_norm",
+    "meq_norm",
+    "age_norm",
+    "event_jetlag",
+    "event_nightshift",
+    "tz_shift_norm",
+    "shift_week_norm",
+    "days_since_event_norm"
+  ],
+  "forecast_days": 7,
+  "n_strategy": 5,
+  "strategy_labels": {
+    "0": "Maintain current routine",
+    "1": "Morning bright light therapy",
+    "2": "Melatonin + gradual phase advance",
+    "3": "Sleep restriction therapy",
+    "4": "Gradual shift schedule adaptation"
+  },
+  "outputs": {
+    "sleep_duration": "float, hours [0\u201312]",
+    "insomnia_prob": "float, probability [0\u20131]",
+    "recovery_days": "float, days [0\u201321]",
+    "insomnia_trajectory": "float array [7], daily risk [0\u20131]",
+    "strategy_logits": "float array [5], apply softmax + argmax"
+  },
+  "event_type_map": {
+    "0": "none",
+    "1": "jet_lag",
+    "2": "night_shift"
+  },
+  "disclaimer": "SCREENING TOOL ONLY. Not a medical diagnostic device. Consult a qualified healthcare professional."
+}
