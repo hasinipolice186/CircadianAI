@@ -1674,163 +1674,36 @@ footer {
 
   </div><!-- /csvPanel -->
 
-    <!-- CSV Simulation section — shown after CSV is loaded -->
-    <div id="csvSimSection" style="display:none;margin-top:8px;margin-bottom:8px;">
-      <div style="height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:24px 0 20px;"></div>
-      <div class="section-label">🌍 Circadian Simulations</div>
-      <div style="background:rgba(26,95,168,0.05);border:1px solid rgba(26,95,168,0.15);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:0.83rem;color:#5a6a84;">
-        ℹ️ Simulation parameters below have been <strong style="color:var(--accent);">pre-filled from your CSV data</strong> — adjust if needed and results update in real time.
-      </div>
+    <!-- CSV status shown after upload -->
+  <div id="csvSimSection" style="display:none;margin-top:16px;">
+    <div style="background:rgba(26,95,168,0.07);border:1px solid rgba(26,95,168,0.2);border-radius:12px;padding:16px 20px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent);margin-bottom:8px;">✓ CSV LOADED — READY TO ANALYSE</div>
+      <div id="csvLoadSummary" style="font-size:0.88rem;color:var(--text);line-height:1.7;"></div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:10px;">The TCN model will run on your 7 days of real wearable data. Clinical questionnaire scores below are still required.</div>
+    </div>
+  </div><!-- /csvSimSection -->
 
-      <!-- Sub-tabs -->
-      <div style="display:flex;gap:8px;margin-bottom:24px;">
-        <button class="sim-tab active" id="csvSimJetBtn" onclick="switchCsvSim('jetlag')">✈️ Jet Lag</button>
-        <button class="sim-tab" id="csvSimShiftBtn" onclick="switchCsvSim('nightshift')">🌙 Night Shift</button>
-      </div>
-
-      <!-- CSV Jet Lag -->
-      <div id="csvSimJetlag">
-        <div class="sim-info-bar">
-          <span>✈️ <strong>Jet Lag Simulator</strong></span>
-          <span style="color:var(--muted);font-size:0.78rem;">Seeded from your CSV bedtime data</span>
-        </div>
-        <div class="sim-inputs-grid">
-          <div class="sim-field">
-            <label>Departure Time Zone</label>
-            <select id="csv_jlFrom" onchange="runCsvJetlagSim()">
-              <option value="-8">UTC-8 (Los Angeles)</option><option value="-5">UTC-5 (New York)</option>
-              <option value="0">UTC+0 (London)</option><option value="1">UTC+1 (Paris, Berlin)</option>
-              <option value="2">UTC+2 (Cairo)</option><option value="3">UTC+3 (Moscow)</option>
-              <option value="4">UTC+4 (Dubai)</option><option value="5">UTC+5 (Karachi)</option>
-              <option value="5.5" selected>UTC+5:30 (Mumbai, Kolkata)</option>
-              <option value="6">UTC+6 (Dhaka)</option><option value="7">UTC+7 (Bangkok)</option>
-              <option value="8">UTC+8 (Singapore)</option><option value="9">UTC+9 (Tokyo)</option>
-              <option value="10">UTC+10 (Sydney)</option><option value="12">UTC+12 (Auckland)</option>
-            </select>
-          </div>
-          <div class="sim-field">
-            <label>Arrival Time Zone</label>
-            <select id="csv_jlTo" onchange="runCsvJetlagSim()">
-              <option value="-8">UTC-8 (Los Angeles)</option><option value="-5" selected>UTC-5 (New York)</option>
-              <option value="0">UTC+0 (London)</option><option value="1">UTC+1 (Paris, Berlin)</option>
-              <option value="2">UTC+2 (Cairo)</option><option value="3">UTC+3 (Moscow)</option>
-              <option value="4">UTC+4 (Dubai)</option><option value="5">UTC+5 (Karachi)</option>
-              <option value="5.5">UTC+5:30 (Mumbai, Kolkata)</option>
-              <option value="6">UTC+6 (Dhaka)</option><option value="7">UTC+7 (Bangkok)</option>
-              <option value="8">UTC+8 (Singapore)</option><option value="9">UTC+9 (Tokyo)</option>
-              <option value="10">UTC+10 (Sydney)</option><option value="12">UTC+12 (Auckland)</option>
-            </select>
-          </div>
-          <div class="sim-field">
-            <label>Usual Bedtime (from CSV avg)</label>
-            <input type="number" id="csv_jlBedtime" value="23" min="18" max="30" step="0.5" onchange="runCsvJetlagSim()">
-          </div>
-          <div class="sim-field">
-            <label>Chronotype</label>
-            <select id="csv_jlChronotype" onchange="runCsvJetlagSim()">
-              <option value="morning">Morning type</option>
-              <option value="intermediate" selected>Intermediate</option>
-              <option value="evening">Evening type</option>
-            </select>
-          </div>
-        </div>
-        <div id="csv_jlResultStrip" style="display:none;">
-          <div class="sim-stats-row" id="csv_jlStats"></div>
-          <div class="sim-chart-wrap">
-            <div class="sim-chart-title">📈 Circadian Phase Drift — Recovery Over 14 Days</div>
-            <canvas id="csv_jlChart" height="90"></canvas>
-          </div>
-          <div class="sim-chart-wrap" style="margin-top:16px;">
-            <div class="sim-chart-title">🛌 Predicted Sleep Quality Per Day</div>
-            <canvas id="csv_jlQualityChart" height="90"></canvas>
-          </div>
-          <div class="sim-schedule-wrap">
-            <div class="sim-chart-title" style="margin-bottom:14px;">📅 Recommended Recovery Schedule</div>
-            <div id="csv_jlSchedule"></div>
-          </div>
-          <div class="sim-tips-wrap">
-            <div class="sim-chart-title" style="margin-bottom:12px;">💡 Personalised Tips</div>
-            <div id="csv_jlTips"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CSV Night Shift -->
-      <div id="csvSimNightshift" style="display:none;">
-        <div class="sim-info-bar" style="border-color:rgba(107,63,160,0.25);background:rgba(107,63,160,0.06);">
-          <span>🌙 <strong>Night Shift Simulator</strong></span>
-          <span style="color:var(--muted);font-size:0.78rem;">Seeded from your CSV bedtime &amp; HRV data</span>
-        </div>
-        <div class="sim-inputs-grid">
-          <div class="sim-field">
-            <label>Shift Start Time (24h)</label>
-            <input type="number" id="csv_nsStart" value="22" min="0" max="23" step="1" onchange="runCsvNightshiftSim()">
-          </div>
-          <div class="sim-field">
-            <label>Shift Duration (hours)</label>
-            <input type="number" id="csv_nsDuration" value="8" min="4" max="14" step="1" onchange="runCsvNightshiftSim()">
-          </div>
-          <div class="sim-field">
-            <label>Shifts per Week</label>
-            <select id="csv_nsPerWeek" onchange="runCsvNightshiftSim()">
-              <option value="2">2 nights/week</option>
-              <option value="3">3 nights/week</option>
-              <option value="4" selected>4 nights/week</option>
-              <option value="5">5 nights/week</option>
-              <option value="7">7 nights/week</option>
-            </select>
-          </div>
-          <div class="sim-field">
-            <label>Weeks on Shift Schedule</label>
-            <input type="number" id="csv_nsWeeks" value="4" min="1" max="12" step="1" onchange="runCsvNightshiftSim()">
-          </div>
-          <div class="sim-field">
-            <label>Sleep Environment</label>
-            <select id="csv_nsEnvironment" onchange="runCsvNightshiftSim()">
-              <option value="poor">Poor (noisy, bright)</option>
-              <option value="moderate" selected>Moderate</option>
-              <option value="good">Good (blackout, quiet)</option>
-            </select>
-          </div>
-          <div class="sim-field">
-            <label>Chronotype</label>
-            <select id="csv_nsChronotype" onchange="runCsvNightshiftSim()">
-              <option value="morning">Morning type</option>
-              <option value="intermediate" selected>Intermediate</option>
-              <option value="evening">Evening type</option>
-            </select>
-          </div>
-        </div>
-        <div id="csv_nsResultStrip" style="display:none;">
-          <div class="sim-stats-row" id="csv_nsStats"></div>
-          <div class="sim-chart-wrap">
-            <div class="sim-chart-title">📈 Insomnia Risk Build-up Over Weeks</div>
-            <canvas id="csv_nsRiskChart" height="90"></canvas>
-          </div>
-          <div class="sim-chart-wrap" style="margin-top:16px;">
-            <div class="sim-chart-title">🌀 Circadian Misalignment &amp; Sleep Debt</div>
-            <canvas id="csv_nsMisalignChart" height="90"></canvas>
-          </div>
-          <div class="sim-tips-wrap">
-            <div class="sim-chart-title" style="margin-bottom:12px;">🩺 Health Impact &amp; Recommendations</div>
-            <div id="csv_nsTips"></div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /csvSimSection -->
 
   <!-- Page 1 → 2 nav -->
-  <div class="page-nav" id="page1Nav">
+  <!-- Questionnaire mode nav -->
+  <div class="page-nav" id="questBtnRow">
     <button class="btn btn-ghost" onclick="loadSampleData()" id="sampleDataBtn">📂 Load Sample Data</button>
     <button class="btn btn-primary" onclick="(function(){
   try {
     var days = collectDays();
     sessionStorage.setItem('circadian_days', JSON.stringify(days));
-    sessionStorage.setItem('circadian_mode', typeof currentMode !== 'undefined' ? currentMode : 'questionnaire');
+    sessionStorage.setItem('circadian_mode', 'questionnaire');
   } catch(e) { console.warn(e); }
   window.location.assign('questionnaire.html');
-})()">Next: Questionnaires →</button>
+})()">→ Next: Questionnaires</button>
+  </div>
+
+  <!-- CSV mode nav -->
+  <div class="page-nav" id="csvBtnRow" style="display:none">
+    <button class="btn btn-primary" id="csvAnalyseBtn" onclick="analyseFromCsv()">
+      ⚡ Analyse Sleep → Results
+    </button>
+    <div id="csvStatus" style="font-size:0.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:8px;"></div>
   </div>
   </div><!-- /appPage1 -->
 
@@ -2551,6 +2424,164 @@ function applyNightshiftAutofill(i) {
 // ═══════════════════════════════════════════
 //  UI HELPERS
 // ═══════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+//  CSV UPLOAD — handleCsvFile / handleDrop / parseSmartwatchCsv
+// ═══════════════════════════════════════════════════════════════
+
+function handleDrop(event) {
+  event.preventDefault();
+  document.getElementById('uploadZone')?.classList.remove('drag-over');
+  const file = event.dataTransfer?.files?.[0];
+  if (file) parseSmartwatchCsv(file);
+}
+
+function handleCsvFile(event) {
+  const file = event.target.files?.[0];
+  if (file) parseSmartwatchCsv(file);
+}
+
+function parseSmartwatchCsv(file) {
+  const zone  = document.getElementById('uploadZone');
+  const title = document.getElementById('uploadTitle');
+  if (title) title.textContent = '\u23f3 Reading ' + file.name + '\u2026';
+
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const text  = ev.target.result;
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) { alert('CSV file appears empty or has only a header row.'); return; }
+
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
+
+      const alias = {
+        sleep_duration_hrs:  ['sleep_duration_hrs','sleep_duration','duration_hrs','sleep_hours','total_sleep_hours','duration_h'],
+        sleep_efficiency:    ['sleep_efficiency','efficiency','sleep_eff','efficiency_pct'],
+        heart_rate_resting:  ['heart_rate_resting','resting_heart_rate','resting_hr','heart_rate','hr_resting','bpm','avg_hr'],
+        rmssd:               ['rmssd','hrv_rmssd','hrv'],
+        sdnn:                ['sdnn','hrv_sdnn'],
+        steps:               ['steps','step_count','daily_steps','total_steps'],
+        light_exposure_lux:  ['light_exposure_lux','light_lux','light_exposure','lux'],
+        bedtime_hour:        ['bedtime_hour','bedtime','sleep_start','sleep_onset','bed_time'],
+      };
+
+      function findCol(key) {
+        for (const a of alias[key]) {
+          const idx = headers.indexOf(a);
+          if (idx !== -1) return idx;
+        }
+        return -1;
+      }
+
+      const colMap = {};
+      const missing = [];
+      for (const key of Object.keys(alias)) {
+        const idx = findCol(key);
+        if (idx === -1) missing.push(key);
+        else colMap[key] = idx;
+      }
+
+      if (missing.length > 4) {
+        alert('Could not find required columns.\n\nRequired: sleep_duration_hrs, sleep_efficiency, heart_rate_resting, rmssd, sdnn, steps, light_exposure_lux, bedtime_hour\n\nFound: ' + headers.join(', '));
+        if (title) title.textContent = '\u274c Upload failed \u2014 check column names';
+        return;
+      }
+
+      const fallbacks = {sleep_duration_hrs:6.5, sleep_efficiency:0.80, heart_rate_resting:65,
+        rmssd:35, sdnn:40, steps:7000, light_exposure_lux:3000, bedtime_hour:23};
+
+      const rows = [];
+      for (let i = 1; i < lines.length && rows.length < 7; i++) {
+        const vals = lines[i].split(',');
+        if (vals.every(v => v.trim() === '')) continue;
+        const row = {};
+        for (const [key, idx] of Object.entries(colMap)) {
+          const raw = (vals[idx] || '').trim();
+          let v = parseFloat(raw);
+          // Parse HH:MM bedtime
+          if (key === 'bedtime_hour' && raw.includes(':')) {
+            const [hh, mm] = raw.split(':').map(Number);
+            v = hh + mm / 60;
+          }
+          row[key] = isNaN(v) ? fallbacks[key] : v;
+        }
+        // Fill missing columns with fallback
+        for (const key of Object.keys(alias)) {
+          if (!(key in row)) row[key] = fallbacks[key];
+        }
+        // Normalise sleep efficiency to 0-1
+        if (row.sleep_efficiency > 1) row.sleep_efficiency /= 100;
+        rows.push(row);
+      }
+
+      if (rows.length === 0) {
+        alert('No valid data rows found in the CSV.');
+        if (title) title.textContent = '\u274c No data rows found';
+        return;
+      }
+
+      while (rows.length < 7) rows.push({...rows[rows.length - 1]});
+      csvRows = rows.slice(0, 7);
+
+      // Show status summary
+      const avgSleep = (csvRows.reduce((s,r) => s + r.sleep_duration_hrs, 0) / 7).toFixed(1);
+      const avgHR    = Math.round(csvRows.reduce((s,r) => s + r.heart_rate_resting, 0) / 7);
+      const avgEff   = Math.round(csvRows.reduce((s,r) => s + r.sleep_efficiency, 0) / 7 * 100);
+      const avgSteps = Math.round(csvRows.reduce((s,r) => s + r.steps, 0) / 7);
+
+      const simSec = document.getElementById('csvSimSection');
+      if (simSec) simSec.style.display = '';
+      const summary = document.getElementById('csvLoadSummary');
+      if (summary) summary.innerHTML =
+        '<strong>' + rows.length + ' days</strong> detected &nbsp;&middot;&nbsp; ' +
+        'Avg sleep <strong>' + avgSleep + 'h</strong> &nbsp;&middot;&nbsp; ' +
+        'Efficiency <strong>' + avgEff + '%</strong> &nbsp;&middot;&nbsp; ' +
+        'Resting HR <strong>' + avgHR + ' bpm</strong> &nbsp;&middot;&nbsp; ' +
+        'Steps <strong>' + avgSteps.toLocaleString() + '/day</strong>';
+
+      // Update upload zone
+      if (title) title.textContent = '\u2713 ' + file.name + ' \u2014 ' + rows.length + ' days loaded';
+      if (zone)  zone.style.borderColor = 'var(--green)';
+
+      // Show Analyse button
+      const csvBtnRow = document.getElementById('csvBtnRow');
+      if (csvBtnRow) csvBtnRow.style.display = '';
+
+    } catch(e) {
+      console.error('CSV parse error:', e);
+      alert('Failed to parse CSV: ' + e.message);
+      if (title) title.textContent = '\u274c Parse error \u2014 see console';
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CSV \u2192 ANALYSE: pass real data to questionnaire \u2192 results
+// ═══════════════════════════════════════════════════════════════
+
+async function analyseFromCsv() {
+  if (!csvRows || csvRows.length < 7) {
+    alert('Please upload a CSV file first.');
+    return;
+  }
+  const btn    = document.getElementById('csvAnalyseBtn');
+  const status = document.getElementById('csvStatus');
+  if (btn)    { btn.disabled = true; btn.textContent = '\u23f3 Preparing\u2026'; }
+  if (status) status.textContent = 'Saving data and navigating\u2026';
+
+  try {
+    // Save CSV rows to sessionStorage — questionnaire.html will merge clinical scores
+    sessionStorage.setItem('circadian_days', JSON.stringify(csvRows));
+    sessionStorage.setItem('circadian_mode', 'csv');
+    window.location.assign('questionnaire.html');
+  } catch(e) {
+    if (status) status.textContent = '\u274c Error: ' + e.message;
+    if (btn) { btn.disabled = false; btn.textContent = '\u26a1 Analyse Sleep \u2192 Results'; }
+  }
+}
+
 function switchMode(mode) {
   currentMode = mode;
   // Questionnaire panel (day forms section)
@@ -2563,7 +2594,8 @@ function switchMode(mode) {
 
   // Shared clinical section: always visible, but show correct action button
   document.getElementById('questBtnRow').style.display  = mode === 'questionnaire' ? '' : 'none';
-  document.getElementById('csvBtnRow').style.display    = mode === 'csv' ? '' : 'none';
+  // csvBtnRow only shown after CSV upload (parseSmartwatchCsv sets it)
+  if (mode !== 'csv') document.getElementById('csvBtnRow').style.display = 'none';
   // Sync page 1 sample data button
   const sampleBtn = document.getElementById('sampleDataBtn');
   if (sampleBtn) sampleBtn.style.display = mode === 'questionnaire' ? '' : 'none';
